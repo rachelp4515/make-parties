@@ -1,18 +1,30 @@
+<!-- views/layouts/main.handlebars -->
+
+<!doctype html>
 <html>
+
 <head>
   <meta charset="utf-8">
-  Make Parties
   <!-- Latest compiled and minified CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://bootswatch.com/5/slate/bootstrap.min.css">
 </head>
+
 <body>
-  {{> navbar}}
+  {{> navbar }}
+  <div class="container">
+    {{#if sessionFlash}}
+    <div class="alert alert-{{sessionFlash.type}} alert-dismissible fade show mt-4" role="alert">
+      {{sessionFlash.message}}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {{/if}}
 
-<div class="container">
-  {{{body}}}
-</div>
-
-  <!-- Latest compiled and minified JavaScript -->
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    {{{body}}}
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
 </body>
+
 </html>
