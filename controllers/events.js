@@ -1,14 +1,22 @@
+//events.js
+
 module.exports = function (app, models) {
 
-    // --------------------------- /
+    // INDEX
     app.get('/', (req, res) => {
         models.Event.findAll({ order: [['createdAt', 'DESC']] }).then(events => {
-            res.render('events', { events: events });
+            res.render('events-index', { events: events });
         })
     })
-    // --------------------------- /CREATE
 
+    // NEW
+    app.get('/events/new', (req, res) => {
+        res.render('events-new', {});
+    })
+
+    // CREATE
     app.post('/events', (req, res) => {
+        req.body.UserId = res.locals.currentUser.id;
         models.Event.create(req.body).then(event => {
             res.redirect(`/events/${event.id}`)
         }).catch((err) => {
@@ -16,25 +24,16 @@ module.exports = function (app, models) {
         });
     })
 
-
-    // --------------------------- /NEW
-    app.get('/events/new', (req, res) => {
-        res.render('events-new', {})
-    })
-
-
-    // --------------------------- /SHOW 
-
+    // SHOW
     app.get('/events/:id', (req, res) => {
-        models.Event.findByPk(req.params.id).then((event) => {
-            res.render('events-show', { event: event })
+        models.Event.findByPk(req.params.id, { include: [{ model: models.Rsvp }] }).then(event => {
+            res.render('events-show', { event: event });
         }).catch((err) => {
-            console.log(err.message)
+            console.log(err.message);
         })
-    })
+    });
 
-
-    // --------------------------- /EDIT
+    // EDIT
     app.get('/events/:id/edit', (req, res) => {
         models.Event.findByPk(req.params.id).then((event) => {
             res.render('events-edit', { event: event });
@@ -43,8 +42,7 @@ module.exports = function (app, models) {
         })
     });
 
-
-    // --------------------------- /UPDATE
+    // UPDATE
     app.put('/events/:id', (req, res) => {
         models.Event.findByPk(req.params.id).then(event => {
             event.update(req.body).then(event => {
@@ -57,8 +55,7 @@ module.exports = function (app, models) {
         });
     });
 
-
-    // --------------------------- /DELETE
+    // DELETE
     app.delete('/events/:id', (req, res) => {
         models.Event.findByPk(req.params.id).then(event => {
             event.destroy();
@@ -67,6 +64,4 @@ module.exports = function (app, models) {
             console.log(err);
         });
     })
-
-
 }
